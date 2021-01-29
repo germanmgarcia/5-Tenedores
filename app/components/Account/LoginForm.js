@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 
 export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <View style={styles.formContainer}>
       <Input
@@ -20,12 +22,13 @@ export default function LoginForm() {
         placeholder="Contraseña"
         containerStyle={styles.inputForm}
         password={true}
-        secureTextEntry={true}
+        secureTextEntry={showPassword ? false : true}
         rightIcon={
           <Icon
             type="material-community"
-            name="eye-outline"
+            name={showPassword ? "eye-off-outline" : "eye-outline"}
             iconStyle={styles.iconRight}
+            onPress={() => setShowPassword(!showPassword)}
           />
         }
       />
