@@ -13,3 +13,5 @@ yarn add @react-navigation/bottom-tabs@~5.2.6
 yarn add react-native-keyboard-aware-scroll-view@~0.9.1
 
 yarn add lodash
+
+yarn add react-native-easy-toast@~2.0.0
