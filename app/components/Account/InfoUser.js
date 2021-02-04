@@ -29,7 +29,7 @@ export default function InfoUser(props) {
       } else {
         uploadImage(result.uri)
           .then(() => {
-            console.log("Imagen Subida");
+            updatePhotoUrl();
           })
           .catch(() => {
             toastRef.current.show("Error al actualizar el avatar.");
@@ -43,6 +43,19 @@ export default function InfoUser(props) {
     const blob = await response.blob();
     const ref = firebase.storage().ref().child(`avatar/${uid}`);
     return ref.put(blob);
+  };
+
+  const updatePhotoUrl = () => {
+    firebase
+      .storage()
+      .ref(`avatar/${uid}`)
+      .getDownloadURL()
+      .then(async (response) => {
+        const update = {
+          photoURL: response,
+        };
+        await firebase.auth().currentUser.updateProfile(update);
+      });
   };
 
   return (
