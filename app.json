@@ -20,6 +20,9 @@
       "supportsTablet": false
     },
     "android": {
+      "permissions": [
+        "CAMERA_ROLL"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

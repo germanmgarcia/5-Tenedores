@@ -21,7 +21,7 @@ export default function UserLogged() {
 
   return (
     <View style={styles.viewUserInfo}>
-      {userInfo && <InfoUser userInfo={userInfo} />}
+      {userInfo && <InfoUser userInfo={userInfo} toastRef={toastRef} />}
       <Text>Account Options</Text>
       <Button
         title="Cerrar sesión"
