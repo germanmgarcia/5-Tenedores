@@ -7,14 +7,14 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function InfoUser(props) {
   const {
-    userInfo: { photoURL, displayName, email },
+    userInfo: { uid, photoURL, displayName, email },
     toastRef,
   } = props;
 
   const changeAvatar = async () => {
     const resultPermission = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
-    );  
+    );
     const resultPermissionCamera =
       resultPermission.permissions.mediaLibrary.status;
     if (resultPermissionCamera === "denied") {
@@ -24,8 +24,25 @@ export default function InfoUser(props) {
         allowsEditing: true,
         aspect: [4, 3],
       });
-      console.log(results);
+      if (result.cancelled) {
+        toastRef.current.show("Has cerrado la selección de images");
+      } else {
+        uploadImage(result.uri)
+          .then(() => {
+            console.log("Imagen Subida");
+          })
+          .catch(() => {
+            toastRef.current.show("Error al actualizar el avatar.");
+          });
+      }
     }
+  };
+
+  const uploadImage = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    const ref = firebase.storage().ref().child(`avatar/${uid}`);
+    return ref.put(blob);
   };
 
   return (
