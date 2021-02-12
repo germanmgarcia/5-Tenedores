@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Button } from "react-native-elements";
+import * as firebase from "firebase";
 
 export default function ChangeDisplayNameForm(props) {
-  const { displayName, setShowModal, toastRef } = props;
+  const { displayName, setShowModal, toastRef, setRealoadUserInfo } = props;
   const [newDisplayName, setNewDisplayName] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = () => {
     setError(null);
@@ -14,7 +16,22 @@ export default function ChangeDisplayNameForm(props) {
     } else if (displayName === newDisplayName) {
       setError("El nombre no puede ser igual al actual.");
     } else {
-      console.log("ok...");
+      setIsLoading(true);
+      const update = {
+        displayName: newDisplayName,
+      };
+      firebase
+        .auth()
+        .currentUser.updateProfile(update)
+        .then(() => {
+          setIsLoading(false);
+          setRealoadUserInfo(true);
+          setShowModal(false);
+        })
+        .catch(() => {
+          setError("Error al actualziar el nombre");
+          setIsLoading(false);
+        });
     }
   };
 
@@ -37,6 +54,7 @@ export default function ChangeDisplayNameForm(props) {
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
         onPress={onSubmit}
+        loading={isLoading}
       />
     </View>
   );
