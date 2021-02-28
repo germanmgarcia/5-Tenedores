@@ -29,11 +29,15 @@ export default function AddRestaurantForm(props) {
   console.log("imagesSelected", imagesSelected);
 
   const AddRestaurant = () => {
-    console.log("OK");
-    // console.log("restaurantName", restaurantName);
-    // console.log("restaurantAddress", restaurantAddress);
-    // console.log("restaurantDescription", restaurantDescription);
-    console.log("locationRestaurant", locationRestaurant);
+    if (!restaurantName || !restaurantAddress || !restaurantDescription) {
+      toastRef.current.show("Todos los campos del formulario son obligatorios");
+    } else if (size(imagesSelected) === 0) {
+      toastRef.current.show("El restaurante tiene que tener almenos una foto");
+    } else if (!locationRestaurant) {
+      toastRef.current.show("Tienes que localizar el restaurante en el mapa");
+    } else {
+      console.log("OK");
+    }
   };
 
   return (
