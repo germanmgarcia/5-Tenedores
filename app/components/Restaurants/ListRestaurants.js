@@ -9,9 +9,11 @@ import {
 } from "react-native";
 import { Image } from "react-native-elements";
 import { size } from "lodash";
+import { useNavigation } from "@react-navigation/native";
 
 export default function ListRestaurants(props) {
   const { restaurants, handleLoadMore, isLoading } = props;
+  const navigation = useNavigation();
 
   return (
     <View>
@@ -19,7 +21,9 @@ export default function ListRestaurants(props) {
         <FlatList
           data={restaurants}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={(restaurant) => <Restaurant restaurant={restaurant} />}
+          renderItem={(restaurant) => (
+            <Restaurant restaurant={restaurant} navigation={navigation} />
+          )}
           onEndReachedThreshold={0.5}
           onEndReached={handleLoadMore}
           ListFooterComponent={<FooterList isLoading={isLoading} />}
@@ -35,12 +39,12 @@ export default function ListRestaurants(props) {
 }
 
 function Restaurant(props) {
-  const { restaurant } = props;
-  const { images, name, address, description } = restaurant.item;
+  const { restaurant, navigation } = props;
+  const { id, images, name, address, description } = restaurant.item;
   const imageRestaurant = images[0];
 
   const gotRestaurant = () => {
-    console.log("OK||");
+    navigation.navigate("restaurant", { id, name });
   };
 
   return (
