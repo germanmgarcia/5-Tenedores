@@ -20,6 +20,12 @@
       "supportsTablet": false
     },
     "android": {
+      "package": "com.germangarcia.cincotenedores",
+      "config": {
+        "googleMaps": {
+          "apiKey": ""
+        }
+      },
       "permissions": [
         "CAMERA_ROLL",
         "READ_EXTERNAL_STORAGE",
