@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Icon } from "react-native-elements";
+import { useFocusEffect } from "@react-navigation/native";
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -23,27 +24,29 @@ export default function Restaurants(props) {
     });
   }, []);
 
-  useEffect(() => {
-    db.collection("restaurants")
-      .get()
-      .then((snap) => {
-        setTotalRestaurants(snap.size);
-      });
-    const resultRestaurants = [];
-    db.collection("restaurants")
-      .orderBy("createBy", "desc")
-      .limit(limitRestaurants)
-      .get()
-      .then((response) => {
-        setStartRestaurants(response.docs[response.docs.length - 1]);
-        response.forEach((doc) => {
-          const restaurant = doc.data();
-          restaurant.id = doc.id;
-          resultRestaurants.push(restaurant);
+  useFocusEffect(
+    useCallback(() => {
+      db.collection("restaurants")
+        .get()
+        .then((snap) => {
+          setTotalRestaurants(snap.size);
         });
-        setRestaurants(resultRestaurants);
-      });
-  }, []);
+      const resultRestaurants = [];
+      db.collection("restaurants")
+        .orderBy("createAt", "desc")
+        .limit(limitRestaurants)
+        .get()
+        .then((response) => {
+          setStartRestaurants(response.docs[response.docs.length - 1]);
+          response.forEach((doc) => {
+            const restaurant = doc.data();
+            restaurant.id = doc.id;
+            resultRestaurants.push(restaurant);
+          });
+          setRestaurants(resultRestaurants);
+        });
+    }, [])
+  );
 
   const handleLoadMore = () => {
     const resultRestaurants = [];
