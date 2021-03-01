@@ -40,7 +40,7 @@ export default function AddRestaurantForm(props) {
           .add({
             name: restaurantName,
             address: restaurantAddress,
-            drescription: restaurantDescription,
+            description: restaurantDescription,
             location: locationRestaurant,
             images: response,
             rating: 0,
