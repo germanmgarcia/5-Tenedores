@@ -54,15 +54,15 @@ export default function Restaurants(props) {
       .limit(limitRestaurants)
       .get()
       .then((response) => {
-        if (response.doc.length > 0) {
-          setStartRestaurants(response.docs[response.length - 1]);
+        if (response.docs.length > 0) {
+          setStartRestaurants(response.docs[response.docs.length - 1]);
         } else {
           setIsLoading(false);
         }
         response.forEach((doc) => {
           const restaurant = doc.data();
           restaurant.id = doc.id;
-          resultRestaurants.push({ restaurant });
+          resultRestaurants.push(restaurant);
         });
         setRestaurants([...restaurants, ...resultRestaurants]);
       });
@@ -70,7 +70,11 @@ export default function Restaurants(props) {
 
   return (
     <View style={styles.viewBody}>
-      <ListRestaurants restaurants={restaurants} />
+      <ListRestaurants
+        restaurants={restaurants}
+        handleLoadMore={handleLoadMore}
+        isLoading={isLoading}
+      />
       {user && (
         <Icon
           reverse
