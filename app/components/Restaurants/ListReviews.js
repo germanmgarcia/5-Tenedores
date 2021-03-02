@@ -18,12 +18,36 @@ export default function ListReviews(props) {
   return (
     <View>
       {userLogged ? (
-        <Button title="Escribe una opinión" />
+        <Button
+          title="Escribe una opinión"
+          buttonStyle={styles.btnAddReview}
+          titleStyle={styles.btnTitleAddReview}
+          icon={{
+            type: "material-community",
+            name: "square-edit-outline",
+            color: "#00a680",
+          }}
+        />
       ) : (
-        <Text>Pata escribir un comentario es necesario estar logeado</Text>
+        <Text
+          style={{ textAlign: "center", color: "#00a680", padding: 20 }}
+          onPress={() => navigation.navigate("login")}
+        >
+          Pata escribir un comentario es necesario estar logeado{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            pulsa AQUI para iniciar sesión
+          </Text>
+        </Text>
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  btnAddReview: {
+    backgroundColor: "transparent",
+  },
+  btnTitleAddReview: {
+    color: "#00a680",
+  },
+});
