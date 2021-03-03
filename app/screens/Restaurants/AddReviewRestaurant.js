@@ -5,6 +5,16 @@ import { AirbnbRating, Button, Input } from "react-native-elements";
 export default function AddReviewRestaurant(props) {
   const { navigation, route } = props;
   const { idRestaurant } = route.params;
+  const [rating, setRating] = useState(null);
+  const [title, setTitle] = useState("");
+  const [review, setReview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const addReview = () => {
+    console.log("rating", rating);
+    console.log("title", title);
+    console.log("review", review);
+  };
 
   return (
     <View style={styles.viewBody}>
@@ -14,19 +24,26 @@ export default function AddReviewRestaurant(props) {
           reviews={["Pésimo", "Deficiente", "Normal", "Muy Bueno", "Excelente"]}
           defaultRating={0}
           size={35}
+          onFinishRating={(value) => setRating(value)}
         />
       </View>
       <View style={styles.formReview}>
-        <Input placeholder="Titulo" containerStyle={styles.input} />
+        <Input
+          placeholder="Titulo"
+          containerStyle={styles.input}
+          onChange={(e) => setTitle(e.nativeEvent.text)}
+        />
         <Input
           placeholder="Comentario..."
           multiline={true}
           inputContainerStyle={styles.textArea}
+          onChange={(e) => setReview(e.nativeEvent.text)}
         />
         <Button
           title="Enviar comentario"
           containerStyle={styles.btnContainer}
           buttonStyle={styles.btn}
+          onPress={addReview}
         />
       </View>
     </View>
