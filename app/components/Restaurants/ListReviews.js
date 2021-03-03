@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button, Avatar, Rating } from "react-native-elements";
+import { map } from "lodash";
+import moment from "moment";
 
 import { firebaseApp } from "../../utils/firebase";
 import firebase from "firebase/app";
@@ -12,8 +14,6 @@ export default function ListReviews(props) {
   const { navigation, idRestaurant } = props;
   const [userLogged, setUserLogged] = useState(false);
   const [reviews, setreviews] = useState([]);
-
-  console.log(reviews);
 
   firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
@@ -63,6 +63,38 @@ export default function ListReviews(props) {
           </Text>
         </Text>
       )}
+      {map(reviews, (review, index) => (
+        <Review key={index} review={review} />
+      ))}
+    </View>
+  );
+}
+
+function Review(props) {
+  const { title, review, rating, createAt, avatarUser } = props.review;
+  const createReview = moment(createAt.seconds * 1000).format(
+    "MM DD YYYY, h:mm:ss"
+  );
+  return (
+    <View style={styles.viewReview}>
+      <View style={styles.viewImageAvatar}>
+        <Avatar
+          size="large"
+          rounded
+          containerStyle={styles.imageAvatarUser}
+          source={
+            avatarUser
+              ? { uri: avatarUser }
+              : require("../../../assets/img/avatar-default.jpg")
+          }
+        />
+      </View>
+      <View style={styles.viewInfo}>
+        <Text style={styles.reviewTitle}>{title}</Text>
+        <Text style={styles.reviewText}>{review}</Text>
+        <Rating imageSize={15} startingValue={rating} readonly />
+        <Text style={styles.reviewDate}>{createReview}</Text>
+      </View>
     </View>
   );
 }
@@ -73,5 +105,39 @@ const styles = StyleSheet.create({
   },
   btnTitleAddReview: {
     color: "#00a680",
+  },
+  viewReview: {
+    flexDirection: "row",
+    padding: 10,
+    paddingBottom: 20,
+    borderBottomColor: "#e3e3e3",
+    borderBottomWidth: 1,
+  },
+  viewImageAvatar: {
+    marginRight: 15,
+  },
+  imageAvatarUser: {
+    width: 50,
+    height: 50,
+  },
+  viewInfo: {
+    flex: 1,
+    alignItems: "flex-start",
+  },
+  reviewTitle: {
+    fontWeight: "bold",
+  },
+  reviewText: {
+    paddingTop: 2,
+    color: "grey",
+    marginBottom: 5,
+  },
+  reviewDate: {
+    marginTop: 5,
+    color: "grey",
+    fontSize: 12,
+    position: "absolute",
+    right: 0,
+    bottom: 0,
   },
 });
