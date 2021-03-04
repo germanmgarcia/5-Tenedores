@@ -42,6 +42,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "Aplicación de restaurantes, creada en React Native - Expo",
+    "githubUrl": "https://github.com/germanmgarcia/5-tenedores"
   }
 }
