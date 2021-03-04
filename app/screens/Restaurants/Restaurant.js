@@ -45,7 +45,25 @@ export default function Restaurant(props) {
   );
 
   const addFavorite = () => {
-    console.log("Añadir a favoritos");
+    if (!userLogged) {
+      toastRef.current.show(
+        "Para usar el sistema de favoritos tienes que estar logeado"
+      );
+    } else {
+      const payload = {
+        idUser: firebase.auth().currentUser.uid,
+        idRestaurant: restaurant.id,
+      };
+      db.collection("favorites")
+        .add(payload)
+        .then(() => {
+          setIsFavorite(true);
+          toastRef.current.show("Restaurante añadido a favoritos");
+        })
+        .catch(() => {
+          toastRef.current.show("Error al añadir el restaurante a favoritos");
+        });
+    }
   };
 
   const removeFavorite = () => {
