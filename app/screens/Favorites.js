@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { Image, Icon, Button } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
+import { size } from "lodash";
+import Loading from "../components/Loading";
 
 import { firebaseApp } from "../utils/firebase";
 import firebase from "firebase";
@@ -62,9 +64,38 @@ export default function Favorites() {
     return Promise.all(arrayRestaurants);
   };
 
+  if (!restaurants) {
+    return <Loading isVisible={true} text="Cargando restaurantes" />;
+  } else if (size(restaurants) === 0) {
+    return <NotFoundRestaurants />;
+  }
+
   return (
     <View>
       <Text>Favorites...</Text>
     </View>
   );
 }
+
+function NotFoundRestaurants() {
+  return (
+    <View style={styles.viewNotFoundRestaurants}>
+      <Icon type="material-community" name="alert-outline" size={50} />
+      <Text style={styles.textNotFoundRestaurants}>
+        No tienes restaurantes en tu lista
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  viewNotFoundRestaurants: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textNotFoundRestaurants: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+});
