@@ -32,9 +32,13 @@ export default function Search(props) {
       {restaurants.length === 0 ? (
         <NoFoundRestaurants />
       ) : (
-        <View>
-          <Text>Resultado</Text>
-        </View>
+        <FlatList
+          data={restaurants}
+          renderItem={(restaurant) => (
+            <Restaurant restaurant={restaurant} navigation={navigation} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
       )}
     </View>
   );
@@ -48,6 +52,29 @@ function NoFoundRestaurants() {
         style={styles.imageNoFound}
       />
     </View>
+  );
+}
+
+function Restaurant(props) {
+  const { restaurant, navigation } = props;
+  const { id, name, images } = restaurant.item;
+
+  return (
+    <ListItem
+      title={name}
+      leftAvatar={{
+        source: images[0]
+          ? { uri: images[0] }
+          : require("../../assets/img/no-image.png"),
+      }}
+      rightIcon={<Icon type="material-community" name="chevron-right" />}
+      onPress={() =>
+        navigation.navigate("restaurants", {
+          screen: "restaurant",
+          params: { id, name },
+        })
+      }
+    />
   );
 }
 
