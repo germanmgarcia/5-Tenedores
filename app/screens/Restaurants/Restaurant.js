@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
 import { map } from "lodash";
 import { Rating, ListItem, Icon } from "react-native-elements";
@@ -43,6 +43,20 @@ export default function Restaurant(props) {
         });
     }, [])
   );
+
+  useEffect(() => {
+    if (userLogged && restaurant) {
+      db.collection("favorites")
+        .where("idRestaurant", "==", restaurant.id)
+        .where("idUser", "==", firebase.auth().currentUser.uid)
+        .get()
+        .then((response) => {
+          if (response.docs.length === 1) {
+            setIsFavorite(true);
+          }
+        });
+    }
+  }, [userLogged, restaurant]);
 
   const addFavorite = () => {
     if (!userLogged) {
