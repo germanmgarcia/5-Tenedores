@@ -11,8 +11,6 @@ export default function Search(props) {
   const [search, setSearch] = useState("");
   const [restaurants, setRestaurants] = useState([]);
 
-  console.log(restaurants);
-
   useEffect(() => {
     if (search) {
       fireSQL
@@ -31,6 +29,24 @@ export default function Search(props) {
         containerStyle={styles.searchBar}
         value={search}
       />
+      {restaurants.length === 0 ? (
+        <NoFoundRestaurants />
+      ) : (
+        <View>
+          <Text>Resultado</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function NoFoundRestaurants() {
+  return (
+    <View style={styles.containerNoFound}>
+      <Image
+        source={require("../../assets/img/no-result-found.png")}
+        style={styles.imageNoFound}
+      />
     </View>
   );
 }
@@ -38,5 +54,13 @@ export default function Search(props) {
 const styles = StyleSheet.create({
   searchBar: {
     marginBottom: 0,
+  },
+  containerNoFound: {
+    flex: 1,
+    alignItems: "center",
+  },
+  imageNoFound: {
+    width: 200,
+    height: 200,
   },
 });
