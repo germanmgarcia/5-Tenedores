@@ -19,11 +19,10 @@ import "firebase/firestore";
 
 const db = firebase.firestore(firebaseApp);
 
-export default function Favorites() {
-  const [restaurants, setRestaurants] = useState(null);
+export default function Favorites(props) {
+  const { navigation } = props;
+  const [restaurants, setRestaurants] = useState([]);
   const [userLogged, setUserLogged] = useState(null);
-
-  console.log(restaurants);
 
   firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
@@ -64,9 +63,11 @@ export default function Favorites() {
     return Promise.all(arrayRestaurants);
   };
 
-  if (!restaurants) {
-    return <Loading isVisible={true} text="Cargando restaurantes" />;
-  } else if (size(restaurants) === 0) {
+  if (!userLogged) {
+    return <UserNoLogged navigation={navigation} />;
+  }
+
+  if (size(restaurants) === 0) {
     return <NotFoundRestaurants />;
   }
 
@@ -88,6 +89,24 @@ function NotFoundRestaurants() {
   );
 }
 
+function UserNoLogged(props) {
+  const { navigation } = props;
+  return (
+    <View style={styles.viewUserNoLogged}>
+      <Icon type="material-community" name="alert-outline" size={50} />
+      <Text style={styles.textUserNoLogged}>
+        Necesitas estar logeado para ver esta sección
+      </Text>
+      <Button
+        title="Ir al login"
+        containerStyle={styles.btnContainerButtonUserNoLogged}
+        buttonStyle={styles.btnStyleButtonNoLogged}
+        onPress={() => navigation.navigate("account", { screen: "login" })}
+      />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   viewNotFoundRestaurants: {
     flex: 1,
@@ -97,5 +116,22 @@ const styles = StyleSheet.create({
   textNotFoundRestaurants: {
     fontSize: 20,
     fontWeight: "bold",
+  },
+  viewUserNoLogged: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  textUserNoLogged: {
+    fontSize: 20,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  btnContainerButtonUserNoLogged: {
+    marginTop: 20,
+    width: "80%",
+  },
+  btnStyleButtonNoLogged: {
+    backgroundColor: "#00a680",
   },
 });
