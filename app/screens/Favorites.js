@@ -86,6 +86,7 @@ export default function Favorites(props) {
               setIsLoading={setIsLoading}
               toastRef={toastRef}
               setReloadData={setReloadData}
+              navigation={navigation}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -132,7 +133,13 @@ function UserNoLogged(props) {
 }
 
 function Restaurant(props) {
-  const { restaurant, toastRef, setIsLoading, setReloadData } = props;
+  const {
+    restaurant,
+    toastRef,
+    setIsLoading,
+    setReloadData,
+    navigation,
+  } = props;
   const { id, name, images } = restaurant.item;
 
   const confirmRemoveFavorite = () => {
@@ -182,7 +189,14 @@ function Restaurant(props) {
 
   return (
     <View style={styles.viewRestaurant}>
-      <TouchableOpacity onPress={() => console.log("IR")}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate("restaurants", {
+            screen: "restaurant",
+            params: { id },
+          })
+        }
+      >
         <Image
           resizeMode="cover"
           style={styles.images}
